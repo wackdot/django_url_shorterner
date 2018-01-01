@@ -1,0 +1,11 @@
+{% extends 'shorterner/base.html' %}
+
+{% block content %}
+
+    <ul>
+        {% for url in url_list %}
+        <li>{{ url.id }} | {{ url.input_url }} | {{ url.short_url }} </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
