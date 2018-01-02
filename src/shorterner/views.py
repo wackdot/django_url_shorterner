@@ -41,7 +41,8 @@ class RequestView(View):
                 new_url = Urls.create(
                     short_url, 
                     input_url, 
-                    analytics=
+                    output['status']
+                    output[]
                     )
 
                 new_url.save()

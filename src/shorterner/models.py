@@ -6,14 +6,41 @@ class Urls(models.Model):
     input_url = models.CharField(max_length=200)
     status = models.CharField(max_length=10)
     created = models.DateTimeField()
+    alltime = models.OneToOneField(
+        AllTime,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        )
+    month = models.OneToOneField(
+        Month,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    week = models.OneToOneField(
+        Week,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    day = models.OneToOneField(
+        Day,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    twohours = models.OneToOneField(
+        TwoHours,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
 
-    @classmethod
-    def create(cls, short_url, input_url, Analytics):
-        urls = cls(
-            short_url=short_url, 
-            input_url=input_url,
-            )
-        return urls
+    # @classmethod
+    # def create(cls, short_url, input_url, status=status, created=created):
+    #     urls = cls(
+    #         short_url=short_url, 
+    #         input_url=input_url,
+    #         status=status,
+    #         created=created,
+    #         )
+    #     return urls
 
     def __str__(self):
         return self.short_url
@@ -27,7 +54,6 @@ class Urls(models.Model):
 
 # 2nd Tier Models
 class AllTime(models.Model):
-    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
     referrers = models.ManyToManyField(Referrers)
@@ -36,7 +62,6 @@ class AllTime(models.Model):
     platforms = models.ManyToManyField(platforms)
 
 class Month(models.Model):
-    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
     referrers = models.ManyToManyField(Referrers)
@@ -46,7 +71,6 @@ class Month(models.Model):
 
 
 class Week(models.Model):
-    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
     referrers = models.ManyToManyField(Referrers)
@@ -55,7 +79,6 @@ class Week(models.Model):
     platforms = models.ManyToManyField(platforms)
 
 class Day(models.Model):
-    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
     referrers = models.ManyToManyField(Referrers)
@@ -64,7 +87,6 @@ class Day(models.Model):
     platforms = models.ManyToManyField(platforms)
 
 class TwoHours(models.Model):
-    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
     referrers = models.ManyToManyField(Referrers)
