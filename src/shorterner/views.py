@@ -3,7 +3,8 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.urls import reverse
 from django.views import View, generic
-from .models import Urls, Analytics, Referrers, Countries, Browsers, Platforms, Month, Week, Day, TwoHours  
+from django.core import serializers
+from . import models
 
 import requests
 import json
@@ -29,28 +30,26 @@ class RequestView(View):
         form = self.form_class(request.POST)
         if form.is_valid():
             input_url = form.cleaned_data['url']
-            short_url = google_url_shorten(input_url)
+            output = google_url_full(input_url)
+            print(output)
 
-            print(input_url)
-            print(short_url)
+            #Coverting JSON to model
+            json_data = json.dumps(output)
+            for deserialized_obj in serializers.deserialize("json", json_data):
+                deserialized_obj.save()
 
-            if short_url is not None:
-                output = google_url_analytics(short_url)
-                print(output)
-
-                new_url = Urls.create(
-                    short_url, 
-                    input_url, 
-                    output['status']
-                    output[]
-                    )
-
-                new_url.save()
-
-                # Direct to the full list
-                return HttpResponseRedirect(reverse('shorterner:list'))
-            else: 
-                return HttpResponseRedirect(reverse('shorterner:list')) # change to error page, invalid url
+            # new_url = Urls.create(
+            #     output['id'], 
+            #     output['longUrl'], 
+            #     output['status'],
+            #     output['created'],
+            #     AllTime.create(
+            #         output['analytics'].['allTime'].['shortUrlClicks'],
+            #         output
+            #     )
+            # )
+            # new_url.save()
+            return HttpResponseRedirect(reverse('shorterner:list')) # change to error page, invalid url
         return render(request, self.template_name, {'form': form})
 
 class IndexView(generic.ListView):
@@ -75,7 +74,7 @@ def google_url_shorten(url):
    resp = json.loads(r.text)
    return resp['id']
 
-def google_url_analytics(url):
+def google_url_full(url):
     req_url = 'https://www.googleapis.com/urlshortener/v1/url?/fbsS&projection=FULL' # Remove the parameters in the url, only retain the required string
     payload = {'key': API_KEY, 'shortUrl': url} # Using key value pairs to populate the url
     r = requests.get(req_url, params=payload)
