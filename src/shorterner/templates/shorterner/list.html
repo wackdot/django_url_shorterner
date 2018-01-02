@@ -4,7 +4,7 @@
 
     <ul>
         {% for url in url_list %}
-        <li>{{ url.id }} | {{ url.input_url }} | {{ url.short_url }} </li>
+        <li>{{ url.id }} | {{ url.input_url }} |  <a href=url.short_url>{{  url.short_url }}</a> </li>
         {% endfor %}
     </ul>
 
