@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.urls import reverse
 from django.views import View, generic
-from .models import Urls
+from .models import Urls, Analytics, Referrers, Countries, Browsers, Platforms, Month, Week, Day, TwoHours  
 
 import requests
 import json
@@ -34,10 +34,22 @@ class RequestView(View):
             print(input_url)
             print(short_url)
 
-            new_url = Urls.create(short_url, input_url)
-            new_url.save()
+            if short_url is not None:
+                output = google_url_analytics(short_url)
+                print(output)
 
-            return HttpResponseRedirect(reverse('shorterner:list'))
+                new_url = Urls.create(
+                    short_url, 
+                    input_url, 
+                    analytics=
+                    )
+
+                new_url.save()
+
+                # Direct to the full list
+                return HttpResponseRedirect(reverse('shorterner:list'))
+            else: 
+                return HttpResponseRedirect(reverse('shorterner:list')) # change to error page, invalid url
         return render(request, self.template_name, {'form': form})
 
 class IndexView(generic.ListView):
@@ -48,6 +60,9 @@ class IndexView(generic.ListView):
         return Urls.objects.all()
 
 # class DetailView(generic.DetailView):
+#     template_name = "shorterner/detail.html"
+#     model = Analytics
+
 
 
 
@@ -59,10 +74,10 @@ def google_url_shorten(url):
    resp = json.loads(r.text)
    return resp['id']
 
-def google_url_expand(self, url):
-    req_url = 'https://www.googleapis.com/urlshortener/v1/url'
-    payload = {'key': self.API_KEY, 'shortUrl': url}
+def google_url_analytics(url):
+    req_url = 'https://www.googleapis.com/urlshortener/v1/url?/fbsS&projection=FULL' # Remove the parameters in the url, only retain the required string
+    payload = {'key': API_KEY, 'shortUrl': url} # Using key value pairs to populate the url
     r = requests.get(req_url, params=payload)
     resp = json.loads(r.text)
-    return resp['longUrl']
+    return resp
 

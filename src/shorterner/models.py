@@ -1,12 +1,14 @@
 from django.db import models
+from django.urls import reverse
 
 class Urls(models.Model):
     short_url = models.CharField(max_length=200)
     input_url = models.CharField(max_length=200)
-    analytics = models.OneToOneField(Analytics, on_delete=models.CASCADE, primary_key=True)),
+    status = models.CharField(max_length=10)
+    created = models.DateTimeField()
 
     @classmethod
-    def create(cls, short_url, input_url):
+    def create(cls, short_url, input_url, Analytics):
         urls = cls(
             short_url=short_url, 
             input_url=input_url,
@@ -16,48 +18,73 @@ class Urls(models.Model):
     def __str__(self):
         return self.short_url
 
-class Analytics(model.Model):
-    status = models.CharField(max_length=10)
-    created = models.DateTimeField()
+    def get_absolute_url(self):
+        return reverse('shorterner:details', kwargs={'slug': self.short_url})
+    
+    @property
+    def title(self):
+        return self.short_url
+
+# 2nd Tier Models
+class AllTime(models.Model):
+    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
- 
-class Referrers(model.Model):
-    analytics_detail = models.ForeignKey(Analytics, on_delete=models.CASCADE)
-    count = models.IntegerField()
-    id = models.CharField(max_length=200)
+    referrers = models.ManyToManyField(Referrers)
+    countries = models.ManyToManyField(Countries)
+    browsers = models.ManyToManyField(Browsers)
+    platforms = models.ManyToManyField(platforms)
 
-class Countries(model.Model):
-    analytics_detail = models.ForeignKey(Analytics, on_delete=models.CASCADE)
-    count = models.IntegerField()
-    id = models.CharField(max_length=200)
+class Month(models.Model):
+    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
+    short_url_clicks = models.IntegerField()
+    long_url_clicks = models.IntegerField()
+    referrers = models.ManyToManyField(Referrers)
+    countries = models.ManyToManyField(Countries)
+    browsers = models.ManyToManyField(Browsers)
+    platforms = models.ManyToManyField(platforms)
 
-class Browsers(model.Model):
-    analytics_detail = models.ForeignKey(Analytics, on_delete=models.CASCADE)
-    count = models.IntegerField()
-    id = models.CharField(max_length=200)
 
-class Platforms(model.Model):
-    analytics_detail = models.ForeignKey(Analytics, on_delete=models.CASCADE)
-    count = models.IntegerField()
-    id = models.CharField(max_length=200)
+class Week(models.Model):
+    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
+    short_url_clicks = models.IntegerField()
+    long_url_clicks = models.IntegerField()
+    referrers = models.ManyToManyField(Referrers)
+    countries = models.ManyToManyField(Countries)
+    browsers = models.ManyToManyField(Browsers)
+    platforms = models.ManyToManyField(platforms)
 
-class Month(model.Model):
-    analytics_detail = models.ForeignKey(Analytics, on_delete=models.CASCADE)
-    count = models.IntegerField()
-    id = models.CharField(max_length=200)
+class Day(models.Model):
+    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
+    short_url_clicks = models.IntegerField()
+    long_url_clicks = models.IntegerField()
+    referrers = models.ManyToManyField(Referrers)
+    countries = models.ManyToManyField(Countries)
+    browsers = models.ManyToManyField(Browsers)
+    platforms = models.ManyToManyField(platforms)
 
-class Week(model.Model):
-    analytics_detail = models.ForeignKey(Analytics, on_delete=models.CASCADE)
-    count = models.IntegerField()
-    id = models.CharField(max_length=200)
+class TwoHours(models.Model):
+    url_id = models.ForeignKey(Urls, on_delete=models.CASCADE)
+    short_url_clicks = models.IntegerField()
+    long_url_clicks = models.IntegerField()
+    referrers = models.ManyToManyField(Referrers)
+    countries = models.ManyToManyField(Countries)
+    browsers = models.ManyToManyField(Browsers)
+    platforms = models.ManyToManyField(platforms)
 
-class Day(model.Model):
-    analytics_detail = models.ForeignKey(Analytics, on_delete=models.CASCADE)
+# 3rd Tier Models
+class Referrers(models.Model):
     count = models.IntegerField()
-    id = models.CharField(max_length=200)
+    ref_id = models.CharField(max_length=200)
 
-class TwoHours(model.Model):
-    analytics_detail = models.ForeignKey(Analytics, on_delete=models.CASCADE)
+class Countries(models.Model):
     count = models.IntegerField()
-    id = models.CharField(max_length=200)
+    country_id = models.CharField(max_length=200)
+
+class Browsers(models.Model):
+    count = models.IntegerField()
+    browser_id = models.CharField(max_length=200)
+
+class Platforms(models.Model):
+    count = models.IntegerField()
+    platform_id = models.CharField(max_length=200)
