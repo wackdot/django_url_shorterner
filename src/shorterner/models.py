@@ -3,64 +3,35 @@ from django.urls import reverse
 
 # 3rd Tier Models
 # Success 
-class Referrers(models.Model):
+class PeriodDetails(models.Model):
     count = models.IntegerField()
-    ref_id = models.CharField(max_length=200)
-
-class Countries(models.Model):
-    count = models.IntegerField()
-    country_id = models.CharField(max_length=200)
-
-class Browsers(models.Model):
-    count = models.IntegerField()
-    browser_id = models.CharField(max_length=200)
-
-class Platforms(models.Model):
-    count = models.IntegerField()
-    platform_id = models.CharField(max_length=200)
+    source_id = models.CharField(max_length=200)
 
 # 2nd Tier Models
 # Success
-class AllTime(models.Model):
+class Period(models.Model):
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
-    referrers = models.ManyToManyField(Referrers)
-    countries = models.ManyToManyField(Countries)
-    browsers = models.ManyToManyField(Browsers)
-    platforms = models.ManyToManyField(Platforms)
-
-class Month(models.Model):
-    short_url_clicks = models.IntegerField()
-    long_url_clicks = models.IntegerField()
-    referrers = models.ManyToManyField(Referrers)
-    countries = models.ManyToManyField(Countries)
-    browsers = models.ManyToManyField(Browsers)
-    platforms = models.ManyToManyField(Platforms)
-
-
-class Week(models.Model):
-    short_url_clicks = models.IntegerField()
-    long_url_clicks = models.IntegerField()
-    referrers = models.ManyToManyField(Referrers)
-    countries = models.ManyToManyField(Countries)
-    browsers = models.ManyToManyField(Browsers)
-    platforms = models.ManyToManyField(Platforms)
-
-class Day(models.Model):
-    short_url_clicks = models.IntegerField()
-    long_url_clicks = models.IntegerField()
-    referrers = models.ManyToManyField(Referrers)
-    countries = models.ManyToManyField(Countries)
-    browsers = models.ManyToManyField(Browsers)
-    platforms = models.ManyToManyField(Platforms)
-
-class TwoHours(models.Model):
-    short_url_clicks = models.IntegerField()
-    long_url_clicks = models.IntegerField()
-    referrers = models.ManyToManyField(Referrers)
-    countries = models.ManyToManyField(Countries)
-    browsers = models.ManyToManyField(Browsers)
-    platforms = models.ManyToManyField(Platforms)
+    referrers = models.ManyToManyField(
+        PeriodDetails, 
+        related_name='%(class)s_referrers', 
+        related_query_name="%(app_label)s_%(class)ss",
+        blank=True)
+    countries = models.ManyToManyField(
+        PeriodDetails, 
+        related_name='%(class)s_countries', 
+        related_query_name="%(app_label)s_%(class)ss",
+        blank=True)
+    browsers = models.ManyToManyField(
+        PeriodDetails, 
+        related_name='%(class)s_browsers',
+        related_query_name="%(app_label)s_%(class)ss",
+        blank=True)
+    platforms = models.ManyToManyField(
+        PeriodDetails, 
+        related_name='%(class)s_platforms', 
+        related_query_name="%(app_label)s_%(class)ss",
+        blank=True)
 
 # Error Message
 class ErrorDetails(models.Model):
@@ -77,29 +48,34 @@ class Urls(models.Model):
     status = models.CharField(max_length=10)
     created = models.DateTimeField()
     alltime = models.OneToOneField(
-        AllTime,
+        Period,
         on_delete=models.CASCADE,
-        primary_key=True,
+        related_name='%(class)s_alltime',
+        related_query_name="%(app_label)s_%(class)ss",
         )
     month = models.OneToOneField(
-        Month,
+        Period,
         on_delete=models.CASCADE,
-        primary_key=True,
+        related_name='%(class)s_month',
+        related_query_name="%(app_label)s_%(class)ss",
     )
     week = models.OneToOneField(
-        Week,
+        Period,
         on_delete=models.CASCADE,
-        primary_key=True,
+        related_name='%(class)s_week',
+        related_query_name="%(app_label)s_%(class)ss",
     )
     day = models.OneToOneField(
-        Day,
+        Period,
         on_delete=models.CASCADE,
-        primary_key=True,
+        related_name='%(class)s_day',
+        related_query_name="%(app_label)s_%(class)ss",
     )
     twohours = models.OneToOneField(
-        TwoHours,
+        Period,
         on_delete=models.CASCADE,
-        primary_key=True,
+        related_name='%(class)s_twohours',
+        related_query_name="%(app_label)s_%(class)ss",
     )
 
     def __str__(self):
@@ -116,7 +92,6 @@ class Error(models.Model):
     error = models.OneToOneField(
         ErrorDetails,
         on_delete=models.CASCADE,
-        primary_key=True,
     )
     code = models.IntegerField()
     message = models.CharField(max_length=200)

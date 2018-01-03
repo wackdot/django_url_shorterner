@@ -4,8 +4,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.views import View, generic
 from django.core import serializers
-from .models import ErrorDetails, Error, Referrers, Countries, Browsers, Platforms, AllTime, Month, Week, Day, TwoHours
-from django.core import serializers
+from .models import ErrorDetails, Error, Period, PeriodDetails
 
 import requests
 import json
@@ -48,49 +47,102 @@ class RequestView(View):
                 
                 # Successful analytics call
                 if 'created' in output_expand:
+                    # created_url_object(output_expand)
+
                     # Retrieving and storing values
-                    if keys_exists(output_expand, 'analytics', 'allTime', 'referrers'):
-                        allTime = output_expand.get('analytics').get('allTime').get('referrers')
-                        referrer_list = []
-                        for item in allTime:
-                            # new_ref = Referrers.objects.create(
-                            #     count = item.get('count'),
-                            #     ref_id = item.get('id')
-                            #     )
-                            # referrer_list.append(new_ref)
-                            new_ref = Referrers(
-                                count = item.get('count'),
-                                ref_id = item.get('id')
-                                )
-                            referrer_list.append(new_ref)
+                    # Tier 3
+                    # All Time
+                    alltime_referrers = created_url_object(output_expand, 'analytics', 'allTime', 'referrers')
+                    alltime_countries = created_url_object(output_expand, 'analytics', 'allTime', 'countries')
+                    alltime_browsers = created_url_object(output_expand, 'analytics', 'allTime', 'browsers')
+                    alltime_platforms = created_url_object(output_expand, 'analytics', 'allTime', 'platforms')
 
-                        for item in referrer_list:
-                            print(item)
+                    # Month
+                    month_referrers = created_url_object(output_expand, 'analytics', 'month', 'referrers')
+                    month_countries = created_url_object(output_expand, 'analytics', 'month', 'countries')
+                    month_browsers = created_url_object(output_expand, 'analytics', 'month', 'browsers')
+                    month_platforms = created_url_object(output_expand, 'analytics', 'month', 'platforms')
 
-                        # print(allTime[0].get('id'))
-                        # print(allTime[0].get('count'))
-                        # print(allTime[1].get('id'))
-                        # print(allTime[1].get('count'))
+                    # Week
+                    week_referrers = created_url_object(output_expand, 'analytics', 'week', 'referrers')
+                    week_countries = created_url_object(output_expand, 'analytics', 'week', 'countries')
+                    week_browsers = created_url_object(output_expand, 'analytics', 'week', 'browsers')
+                    week_platforms = created_url_object(output_expand, 'analytics', 'week', 'platforms')
 
-                        # new_url.save()
+                    # Day
+                    day_referrers = created_url_object(output_expand, 'analytics', 'day', 'referrers')
+                    day_countries = created_url_object(output_expand, 'analytics', 'day', 'countries')
+                    day_browsers = created_url_object(output_expand, 'analytics', 'day', 'browsers')
+                    day_platforms = created_url_object(output_expand, 'analytics', 'day', 'platforms')
+                    
+                    # twoHours
+                    twoHours_referrers = created_url_object(output_expand, 'analytics', 'twoHours', 'referrers')
+                    twoHours_countries = created_url_object(output_expand, 'analytics', 'twoHours', 'countries')
+                    twoHours_browsers = created_url_object(output_expand, 'analytics', 'twoHours', 'browsers')
+                    twoHours_platforms = created_url_object(output_expand, 'analytics', 'twoHours', 'platforms')
+
+                    # Tier 2
+                    alltime = Period(
+                        short_url_clicks = output_expand.get('allTime').get('shortUrlClicks'),
+                        long_url_clicks = output_expand.get('allTime').get('longUrlClicks'),
+                        referrers = alltime_referrers,
+                        countries = alltime_countries,
+                        browsers = alltime_browsers,
+                        platforms = alltime_platforms
+                    )
+                    print(alltime)
+                    month = Period(
+                        short_url_clicks = output_expand.get('month').get('shortUrlClicks'),
+                        long_url_clicks = output_expand.get('month').get('longUrlClicks'),
+                        referrers = month_referrers,
+                        countries = month_countries,
+                        browsers = month_browsers,
+                        platforms = month_platforms
+                    )
+                    print(month)
+                    week = Period(
+                        short_url_clicks = output_expand.get('week').get('shortUrlClicks'),
+                        long_url_clicks = output_expand.get('week').get('longUrlClicks'),
+                        referrers = week_referrers,
+                        countries = week_countries,
+                        browsers = week_browsers,
+                        platforms = week_platforms
+                    )
+                    print(week)
+                    day = Period(
+                        short_url_clicks = output_expand.get('day').get('shortUrlClicks'),
+                        long_url_clicks = output_expand.get('day').get('longUrlClicks'),
+                        referrers = day_referrers,
+                        countries = day_countries,
+                        browsers = day_browsers,
+                        platforms = day_platforms
+                    )
+                    print(day)
+                    twoHours = Period(
+                        short_url_clicks = output_expand.get('twoHours').get('shortUrlClicks'),
+                        long_url_clicks = output_expand.get('twoHours').get('longUrlClicks'),
+                        referrers = twoHours_referrers,
+                        countries = twoHours_countries,
+                        browsers = twoHours_browsers,
+                        platforms = twoHours_platforms
+                    )
+                    print(twoHours)
+
+                    # Create Url
+                    # new_url = Urls(
+                    #     short_url = output_expand.get('id'),
+                    #     input_url = output_expand.get('longUrl'),
+                    #     status = output_expand.get('status'),
+                    #     created = output_expand.get('created'),
+                    #     allTime = 
+                    # )
+
+                    # new_url.save()
+
 
                     # Unsuccessful tiny url creation
-                  
-                        # print(output.get('error', {}))
 
-                        # errordetails = ErrorDetails.objects.create(
-                        #     output.get('error', {}).get('errors', {}).get('domain', {}),
-                        #     output.get('error')('errors')('required'),
-                        #     output.get('error')('errors')('message'),
-                        #     output('error')('errors')('locationType'),
-                        #     output('error')('errors')('location')
-                        # )
-                        # error = Error.objects.create(
-                        #     errordetails,
-                        #     output.get('code'),
-                        #     output.get('message')
-                        # )
-                        # error.save()
+
             return HttpResponseRedirect(reverse('shorterner:request')) # change to error page, invalid url
         return render(request, self.template_name, {'form': form})
 
@@ -144,3 +196,18 @@ def keys_exists(element, *keys):
         except KeyError:
             return False
     return True
+
+# Rename object to create_period_object
+def created_url_object(obj_dict, *keys):
+    return_list = []
+    if keys_exists(obj_dict, keys):
+        obj_list = obj_dict.get(keys[0]).get(keys[1]).get(keys[2])
+        for item in obj_list:
+            new_item = PeriodDetails(
+                count = item.get('count'),
+                source_id = item.get('id')
+                )
+            return_list.append(new_item)
+            print(new_item)
+    return return_list
+
