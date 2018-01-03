@@ -47,98 +47,126 @@ class RequestView(View):
                 
                 # Successful analytics call
                 if 'created' in output_expand:
-                    # created_url_object(output_expand)
-
                     # Retrieving and storing values
                     # Tier 3
                     # All Time
-                    alltime_referrers = created_url_object(output_expand, 'analytics', 'allTime', 'referrers')
-                    alltime_countries = created_url_object(output_expand, 'analytics', 'allTime', 'countries')
-                    alltime_browsers = created_url_object(output_expand, 'analytics', 'allTime', 'browsers')
-                    alltime_platforms = created_url_object(output_expand, 'analytics', 'allTime', 'platforms')
-
-                    # Month
-                    month_referrers = created_url_object(output_expand, 'analytics', 'month', 'referrers')
-                    month_countries = created_url_object(output_expand, 'analytics', 'month', 'countries')
-                    month_browsers = created_url_object(output_expand, 'analytics', 'month', 'browsers')
-                    month_platforms = created_url_object(output_expand, 'analytics', 'month', 'platforms')
-
-                    # Week
-                    week_referrers = created_url_object(output_expand, 'analytics', 'week', 'referrers')
-                    week_countries = created_url_object(output_expand, 'analytics', 'week', 'countries')
-                    week_browsers = created_url_object(output_expand, 'analytics', 'week', 'browsers')
-                    week_platforms = created_url_object(output_expand, 'analytics', 'week', 'platforms')
-
-                    # Day
-                    day_referrers = created_url_object(output_expand, 'analytics', 'day', 'referrers')
-                    day_countries = created_url_object(output_expand, 'analytics', 'day', 'countries')
-                    day_browsers = created_url_object(output_expand, 'analytics', 'day', 'browsers')
-                    day_platforms = created_url_object(output_expand, 'analytics', 'day', 'platforms')
+                    alltime_list = []
+                    alltime_list.append(create_period_detail(output_expand, 'analytics', 'allTime', 'referrers'))
+                    alltime_list.append(create_period_detail(output_expand, 'analytics', 'allTime', 'countries'))
+                    alltime_list.append(create_period_detail(output_expand, 'analytics', 'allTime', 'browsers'))
+                    alltime_list.append(create_period_detail(output_expand, 'analytics', 'allTime', 'platforms'))
                     
-                    # twoHours
-                    twoHours_referrers = created_url_object(output_expand, 'analytics', 'twoHours', 'referrers')
-                    twoHours_countries = created_url_object(output_expand, 'analytics', 'twoHours', 'countries')
-                    twoHours_browsers = created_url_object(output_expand, 'analytics', 'twoHours', 'browsers')
-                    twoHours_platforms = created_url_object(output_expand, 'analytics', 'twoHours', 'platforms')
+                    # # # Month
+                    # month_list = [
+                    #     month_referrers = create_period_detail(output_expand, 'analytics', 'month', 'referrers'),
+                    #     month_countries = create_period_detail(output_expand, 'analytics', 'month', 'countries'),
+                    #     month_browsers = create_period_detail(output_expand, 'analytics', 'month', 'browsers'),
+                    #     month_platforms = create_period_detail(output_expand, 'analytics', 'month', 'platforms')
+                    # ]
+
+                    # # # Week
+                    # week_list = [
+                    #     week_referrers = create_period_detail(output_expand, 'analytics', 'week', 'referrers'),
+                    #     week_countries = create_period_detail(output_expand, 'analytics', 'week', 'countries'),
+                    #     week_browsers = create_period_detail(output_expand, 'analytics', 'week', 'browsers'),
+                    #     week_platforms = create_period_detail(output_expand, 'analytics', 'week', 'platforms')
+                    # ]
+                    
+                    # # # Day
+                    # day_list = [
+                    #     day_referrers = create_period_detail(output_expand, 'analytics', 'day', 'referrers'),
+                    #     day_countries = create_period_detail(output_expand, 'analytics', 'day', 'countries'),
+                    #     day_browsers = create_period_detail(output_expand, 'analytics', 'day', 'browsers'),
+                    #     day_platforms = create_period_detail(output_expand, 'analytics', 'day', 'platforms')
+                    # ]
+
+                    # # # twoHours
+                    # twoHours_list = [
+                    #     twoHours_referrers = create_period_detail(output_expand, 'analytics', 'twoHours', 'referrers'),
+                    #     twoHours_countries = create_period_detail(output_expand, 'analytics', 'twoHours', 'countries'),
+                    #     twoHours_browsers = create_period_detail(output_expand, 'analytics', 'twoHours', 'browsers'),
+                    #     twoHours_platforms = create_period_detail(output_expand, 'analytics', 'twoHours', 'platforms')
+                    # ]
 
                     # Tier 2
-                    alltime = Period(
-                        short_url_clicks = output_expand.get('allTime').get('shortUrlClicks'),
-                        long_url_clicks = output_expand.get('allTime').get('longUrlClicks'),
-                        referrers = alltime_referrers,
-                        countries = alltime_countries,
-                        browsers = alltime_browsers,
-                        platforms = alltime_platforms
-                    )
-                    print(alltime)
-                    month = Period(
-                        short_url_clicks = output_expand.get('month').get('shortUrlClicks'),
-                        long_url_clicks = output_expand.get('month').get('longUrlClicks'),
-                        referrers = month_referrers,
-                        countries = month_countries,
-                        browsers = month_browsers,
-                        platforms = month_platforms
-                    )
-                    print(month)
-                    week = Period(
-                        short_url_clicks = output_expand.get('week').get('shortUrlClicks'),
-                        long_url_clicks = output_expand.get('week').get('longUrlClicks'),
-                        referrers = week_referrers,
-                        countries = week_countries,
-                        browsers = week_browsers,
-                        platforms = week_platforms
-                    )
-                    print(week)
-                    day = Period(
-                        short_url_clicks = output_expand.get('day').get('shortUrlClicks'),
-                        long_url_clicks = output_expand.get('day').get('longUrlClicks'),
-                        referrers = day_referrers,
-                        countries = day_countries,
-                        browsers = day_browsers,
-                        platforms = day_platforms
-                    )
-                    print(day)
-                    twoHours = Period(
-                        short_url_clicks = output_expand.get('twoHours').get('shortUrlClicks'),
-                        long_url_clicks = output_expand.get('twoHours').get('longUrlClicks'),
-                        referrers = twoHours_referrers,
-                        countries = twoHours_countries,
-                        browsers = twoHours_browsers,
-                        platforms = twoHours_platforms
-                    )
-                    print(twoHours)
+                    test = create_period(output_expand, alltime_list, 'analytics', 'allTime', 'shortUrlClicks', 'longUrlClicks')
 
-                    # Create Url
+
+                    # alltime = Period(
+                    #     short_url_clicks = int(output_expand.get('analytics').get('allTime').get('shortUrlClicks')),
+                    #     long_url_clicks = int(output_expand.get('analytics').get('allTime').get('longUrlClicks'))                       
+                    # )
+                    # alltime.save()
+                    # for item in alltime_referrers:
+                    #     alltime.referrers.add(item)
+                    # for item in alltime_countries:
+                    #     alltime.countries.add(item)
+                    # for item in alltime_browsers:
+                    #     alltime.browsers.add(item)
+                    # for item in alltime_platforms:
+                    #     alltime.platforms.add(item)
+                    # alltime.save()
+
+                    # month = Period(
+                    #     short_url_clicks = int(output_expand.get('analytics').get('month').get('shortUrlClicks')),
+                    #     long_url_clicks = int(output_expand.get('analytics').get('month').get('longUrlClicks')),
+                    # )
+                    # month.save()
+                    # for item in month_referrers:
+                    #     month.referrers.add(item)
+                    # for item in month_countries:
+                    #     month.countries.add(item)
+                    # for item in month_browsers:
+                    #     month.browsers.add(item)
+                    # for item in month_platforms:
+                    #     month.platforms.add(item)
+                    # month.save()
+
+                    # week = Period(
+                    #     short_url_clicks = output_expand.get('analytics').get('week').get('shortUrlClicks'),
+                    #     long_url_clicks = output_expand.get('analytics').get('week').get('longUrlClicks'),
+                    #     referrers = week_referrers,
+                    #     countries = week_countries,
+                    #     browsers = week_browsers,
+                    #     platforms = week_platforms
+                    # )
+                    # print(week)
+
+                    # day = Period(
+                    #     short_url_clicks = output_expand.get('analytics').get('day').get('shortUrlClicks'),
+                    #     long_url_clicks = output_expand.get('analytics').get('day').get('longUrlClicks'),
+                    #     referrers = day_referrers,
+                    #     countries = day_countries,
+                    #     browsers = day_browsers,
+                    #     platforms = day_platforms
+                    # )
+                    # print(day)
+
+                    # twoHours = Period(
+                    #     short_url_clicks = output_expand.get('analytics').get('twoHours').get('shortUrlClicks'),
+                    #     long_url_clicks = output_expand.get('analytics').get('twoHours').get('longUrlClicks'),
+                    #     referrers = twoHours_referrers,
+                    #     countries = twoHours_countries,
+                    #     browsers = twoHours_browsers,
+                    #     platforms = twoHours_platforms
+                    # )
+                    # print(twoHours)
+
+                    # # Create Url
                     # new_url = Urls(
                     #     short_url = output_expand.get('id'),
                     #     input_url = output_expand.get('longUrl'),
                     #     status = output_expand.get('status'),
                     #     created = output_expand.get('created'),
-                    #     allTime = 
+                    #     allTime = alltime,
+                    #     month = month,
+                    #     week = week,
+                    #     day = day,
+                    #     twohours = twoHours                        
                     # )
 
-                    # new_url.save()
-
+                    # for attr, value in new_url.__dict__.iteritems():
+                    #     print(attr, value)
 
                     # Unsuccessful tiny url creation
 
@@ -166,13 +194,6 @@ def google_url_shorten(url):
    resp = json.loads(r.text)
    return resp
 
-# def google_url_full(url):
-#     req_url = 'https://www.googleapis.com/urlshortener/v1/url?shortUrl=/fbsS&projection=FULL' # Remove the parameters in the url, only retain the required string
-#     payload = {'key': API_KEY, 'shortUrl': url} # Using key value pairs to populate the url
-#     r = requests.get(req_url, params=payload)
-#     resp = json.loads(r.text)
-#     return resp
-
 def google_url_expand(url):
     req_url = 'https://www.googleapis.com/urlshortener/v1/url' 
     payload = {'key': API_KEY, 'shortUrl': url, 'projection': 'full'}
@@ -197,17 +218,29 @@ def keys_exists(element, *keys):
             return False
     return True
 
-# Rename object to create_period_object
-def created_url_object(obj_dict, *keys):
+def create_period_detail(obj_dict, *keys):
     return_list = []
-    if keys_exists(obj_dict, keys):
+    if keys_exists(obj_dict, *keys):
         obj_list = obj_dict.get(keys[0]).get(keys[1]).get(keys[2])
         for item in obj_list:
             new_item = PeriodDetails(
-                count = item.get('count'),
+                count = int(item.get('count')),
                 source_id = item.get('id')
                 )
+            new_item.save() #Requires the object to be saved before it can be added as part of another object
             return_list.append(new_item)
-            print(new_item)
     return return_list
+
+
+def create_period(obj_dict, obj_list, *keys):
+    if keys_exists(obj_dict, *keys):
+        output = Period(
+            short_url_clicks = int(obj_dict.get(keys[0]).get(keys[1]).get(keys[2])),
+            long_url_clicks = int(obj_dict.get(keys[0]).get(keys[1]).get(keys[3]))
+        )
+        output.save()
+        for index, list in enumerate(obj_list):
+            for PeriodDetails in list:
+                print(index)
+
 
