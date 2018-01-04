@@ -5,12 +5,11 @@
     <ul>
         {% for url in url_list %}
         <li>
-            {{url.input_url}} |  
-            <a href=url.short_url>{{url.short_url}}</a> |
+            {{url.short_url}} | {{url.input_url}} |
+            <a href='{% url "shorterner:url-detail" kwargs={'slug': url.short_url} %}'>Details</a>
         </li>
         {% endfor %}
     </ul>
 
     <!-- Display the detail information -->
-
 {% endblock %}

@@ -3,7 +3,9 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.urls import reverse
 from django.views import View, generic
+from django.views.generic.detail import DetailView
 from django.core import serializers
+from django.http import Http404
 
 from .models import ErrorDetails, Error, Period, PeriodDetails, Urls
 from .forms import SubmitUrlForm
@@ -57,7 +59,7 @@ class RequestView(View):
                 # Unsuccesful: Error message
                 else: 
                     test = 1
-            return HttpResponseRedirect(reverse('shorterner:list')) # change to error page, invalid url
+            return HttpResponseRedirect(reverse('shorterner:url-list'))
         return render(request, self.template_name, {'form': form})
 
 class IndexView(generic.ListView):
@@ -67,20 +69,23 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Urls.objects.all()
 
-class DetailView(generic.DetailView):
+class DetailView(DetailView):
     template_name = "shorterner/detail.html"
     model = Urls
-    slug_url_kwarg = 'slug'
-    query_pk_and_slug = True
-    
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context[''] = Urls.objects.filter(
-    #         input_url=slug_url_kwarg
-    #         ).filter(
+    # slug_url_kwarg = 'slug'
+    # query_pk_and_slug = True
 
-    #         )
-        # return context
+    def get_object(self):
+        slug = self.kwargs.get("slug")
+        if slug is None:
+            raise Http404
+        return get_object_or_404(Urls, slug__iexact=slug)
+
+# Look a try django 1.11 for an example profiles.views 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 

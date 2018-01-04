@@ -57,6 +57,7 @@ class Urls(models.Model):
     input_url = models.CharField(max_length=200)
     status = models.CharField(max_length=10)
     created = models.DateTimeField()
+    slug = models.SlugField(unique=True, null=True, blank=True)
     alltime = models.OneToOneField(
         Period,
         on_delete=models.CASCADE,
@@ -92,7 +93,7 @@ class Urls(models.Model):
         related_query_name="%(app_label)s_%(class)ss",
         null=True
         )
-
+    
     def __str__(self):
         return self.short_url
 

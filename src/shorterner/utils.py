@@ -149,6 +149,7 @@ def create_url(obj_json):
         input_url = obj_json.get('longUrl'),
         status = obj_json.get('status'),
         created = obj_json.get('created'),
+        slug = obj_json.get('id'),
         alltime = alltime,
         month = month,
         week = week,
