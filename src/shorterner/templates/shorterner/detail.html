@@ -1,1 +1,18 @@
-<h1>Details</h1>
+{% extends 'shorterner/base.html' %}
+
+{% block content %}
+
+    <h2>{{ url_details.short_url }} Details</h2>
+    <p>Input Url: {{ url_details.input_url}}</p>
+    <p>Status: {{ url_details.status }}</p>
+    <p>Created: {{ url_details.created }}</p>
+    <p>{{ alltime.short_url_clicks }}</p>
+
+    <ul>
+        {% for referrers in alltime.referrer %}
+        <li>
+            {{ referrers.count }} | {{ referrers.source_id }}
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,5 +1,5 @@
 
-from .models import ErrorDetails, Error, Period, PeriodDetails, Urls
+from .models import ErrorDetail, Error, Period, PeriodDetail, Url
 
 import requests
 import json
@@ -45,7 +45,7 @@ def create_period_detail(obj_dict, *keys):
         obj_list = obj_dict.get(keys[0]).get(keys[1]).get(keys[2])
         print(f"Period: {keys[1]} | Metric Type: {keys[2]}")
         for item in obj_list:
-            new_item = PeriodDetails(
+            new_item = PeriodDetail(
                 count = int(item.get('count')),
                 source_id = item.get('id')
                 )
@@ -62,27 +62,26 @@ def create_period(obj_dict, obj_list, *keys):
         short_url_clicks = int(obj_dict.get(keys[0]).get(keys[1]).get(keys[2])),
         long_url_clicks = int(obj_dict.get(keys[0]).get(keys[1]).get(keys[3]))
     )
-    output.save()
     for index, list in enumerate(obj_list):
         print(f"List Index: {index} | List: {list}")
         if index is 0:
             obj_count = 0
             for item in list:
-                output.referrers = item
+                output.referrer = item
                 obj_count = obj_count + 1
             obj_total = obj_total + obj_count
             print(f"Referrers added {obj_count} objects")
         elif index is 1:
             obj_count = 0
             for item in list:
-                output.countries = item
+                output.country = item
                 obj_count = obj_count + 1
             obj_total = obj_total + obj_count
             print(f"Countries added {obj_count} objects")
         elif index is 2:
             obj_count = 0
             for item in list:
-                output.browsers = item
+                output.browser = item
                 obj_count = obj_count + 1
             obj_total = obj_total + obj_count
             print(f"Browsers added {obj_count} objects")
@@ -94,10 +93,10 @@ def create_period(obj_dict, obj_list, *keys):
             obj_total = obj_total + obj_count
             print(f"Platforms added {obj_count} objects")
     output.save()
-    print(f"The total number of object(s) added is {obj_total}")
+    # print(f"The total number of object(s) added is {obj_total}")
     return output
     
-def create_url(obj_json):
+def create_url(obj_json, input_url):
     # Retrieving values from JSON > Creating 
     # Tier 3
     # All Time
@@ -129,31 +128,63 @@ def create_url(obj_json):
     day_list.append(create_period_detail(obj_json, 'analytics', 'day', 'platforms'))
 
     # twoHours
-    twoHours_list = []
-    twoHours_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'referrers'))
-    twoHours_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'countries'))
-    twoHours_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'browsers'))
-    twoHours_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'platforms'))
+    twoHour_list = []
+    twoHour_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'referrers'))
+    twoHour_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'countries'))
+    twoHour_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'browsers'))
+    twoHour_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'platforms'))
 
     # Tier 2
     alltime = create_period(obj_json, alltime_list, 'analytics', 'allTime', 'shortUrlClicks', 'longUrlClicks')
     month = create_period(obj_json, month_list, 'analytics', 'month', 'shortUrlClicks', 'longUrlClicks')
     week = create_period(obj_json, week_list, 'analytics', 'week', 'shortUrlClicks', 'longUrlClicks')
     day = create_period(obj_json, day_list, 'analytics', 'day', 'shortUrlClicks', 'longUrlClicks')
-    twoHours = create_period(obj_json, day_list, 'analytics', 'twoHours', 'shortUrlClicks', 'longUrlClicks')
+    twoHour = create_period(obj_json, twoHour_list, 'analytics', 'twoHours', 'shortUrlClicks', 'longUrlClicks')
 
     # Tier 1
     # Create Url
-    new_url = Urls.objects.create(
+    new_url = Url.objects.create(
         short_url = obj_json.get('id'),
-        input_url = obj_json.get('longUrl'),
+        input_url = input_url,
         status = obj_json.get('status'),
         created = obj_json.get('created'),
-        slug = obj_json.get('id'),
         alltime = alltime,
         month = month,
         week = week,
         day = day,
-        twohours = twoHours                        
+        twohour = twoHour                      
     )
     return new_url
+
+
+
+            # for index, list in enumerate(obj_list):
+            # print(f"List Index: {index} | List: {list}")
+            # if index is 0:
+            #     obj_count = 0
+            #     for item in list:
+            #         referrer = item
+            #         obj_count = obj_count + 1
+            #     obj_total = obj_total + obj_count
+            #     print(f"Referrers added {obj_count} objects")
+            # elif index is 1:
+            #     obj_count = 0
+            #     for item in list:
+            #         output.country = item
+            #         obj_count = obj_count + 1
+            #     obj_total = obj_total + obj_count
+            #     print(f"Countries added {obj_count} objects")
+            # elif index is 2:
+            #     obj_count = 0
+            #     for item in list:
+            #         output.browser = item
+            #         obj_count = obj_count + 1
+            #     obj_total = obj_total + obj_count
+            #     print(f"Browsers added {obj_count} objects")
+            # elif index is 3:
+            #     obj_count = 0
+            #     for item in list:
+            #         output.platforms = item
+            #         obj_count = obj_count + 1
+            #     obj_total = obj_total + obj_count
+            #     print(f"Platforms added {obj_count} objects")

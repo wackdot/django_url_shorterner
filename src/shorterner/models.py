@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 # 3rd Tier Models
 # Success 
-class PeriodDetails(models.Model):
+class PeriodDetail(models.Model):
     count = models.IntegerField()
     source_id = models.CharField(max_length=200)
 
@@ -14,37 +14,37 @@ class PeriodDetails(models.Model):
 class Period(models.Model):
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
-    referrers = models.ForeignKey(
-        PeriodDetails, 
-        related_name='%(class)s_referrers', 
-        related_query_name="%(app_label)s_%(class)ss",
+    referrer = models.ForeignKey(
+        PeriodDetail, 
+        related_name='referrers', 
+        related_query_name='referrer',
         on_delete=models.CASCADE,
         null=True
         )
-    countries = models.ForeignKey(
-        PeriodDetails, 
-        related_name='%(class)s_countries', 
-        related_query_name="%(app_label)s_%(class)ss",
+    country = models.ForeignKey(
+        PeriodDetail, 
+        related_name='countries', 
+        related_query_name='country',
         on_delete=models.CASCADE,
         null=True    
         )
-    browsers = models.ForeignKey(
-        PeriodDetails, 
-        related_name='%(class)s_browsers',
-        related_query_name="%(app_label)s_%(class)ss",
+    browser = models.ForeignKey(
+        PeriodDetail, 
+        related_name='browsers', 
+        related_query_name='browser',
         on_delete=models.CASCADE,
         null=True
         )
-    platforms = models.ForeignKey(
-        PeriodDetails, 
-        related_name='%(class)s_platforms', 
-        related_query_name="%(app_label)s_%(class)ss",
+    platform = models.ForeignKey(
+        PeriodDetail, 
+        related_name='platforms', 
+        related_query_name='platform',
         on_delete=models.CASCADE,
         null=True
         )
 
 # Error Message
-class ErrorDetails(models.Model):
+class ErrorDetail(models.Model):
     domain = models.CharField(max_length=200)
     required = models.CharField(max_length=200)
     message = models.CharField(max_length=200)
@@ -52,46 +52,45 @@ class ErrorDetails(models.Model):
     location = models.CharField(max_length=200)
 
 # 1st Tier Models
-class Urls(models.Model):
+class Url(models.Model):
     short_url = models.CharField(max_length=200)
     input_url = models.CharField(max_length=200)
     status = models.CharField(max_length=10)
     created = models.DateTimeField()
-    slug = models.SlugField(unique=True, null=True, blank=True)
     alltime = models.OneToOneField(
         Period,
         on_delete=models.CASCADE,
-        related_name='%(class)s_alltime',
-        related_query_name="%(app_label)s_%(class)ss",
-        null=True
+        null=True,
+        related_name='alltimes', 
+        related_query_name='alltime',
         )
     month = models.OneToOneField(
         Period,
         on_delete=models.CASCADE,
-        related_name='%(class)s_month',
-        related_query_name="%(app_label)s_%(class)ss",
-        null=True
+        null=True,
+        related_name='months', 
+        related_query_name='month',
         )
     week = models.OneToOneField(
         Period,
         on_delete=models.CASCADE,
-        related_name='%(class)s_week',
-        related_query_name="%(app_label)s_%(class)ss",
-        null=True
+        null=True,
+        related_name='weeks', 
+        related_query_name='week',
         )
     day = models.OneToOneField(
         Period,
         on_delete=models.CASCADE,
-        related_name='%(class)s_day',
-        related_query_name="%(app_label)s_%(class)ss",
-        null=True
+        null=True,
+        related_name='days', 
+        related_query_name='day',
         )
-    twohours = models.OneToOneField(
+    twohour = models.OneToOneField(
         Period,
         on_delete=models.CASCADE,
-        related_name='%(class)s_twohours',
-        related_query_name="%(app_label)s_%(class)ss",
-        null=True
+        null=True,
+        related_name='twohours', 
+        related_query_name='twohour',
         )
     
     def __str__(self):
@@ -106,7 +105,7 @@ class Urls(models.Model):
 
 class Error(models.Model):
     error = models.OneToOneField(
-        ErrorDetails,
+        ErrorDetail,
         on_delete=models.CASCADE,
     )
     code = models.IntegerField()
