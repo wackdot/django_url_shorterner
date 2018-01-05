@@ -14,33 +14,25 @@ class PeriodDetail(models.Model):
 class Period(models.Model):
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
-    referrer = models.ForeignKey(
-        PeriodDetail, 
-        related_name='referrers', 
-        related_query_name='referrer',
-        on_delete=models.CASCADE,
-        null=True
+    referrer = models.ManyToManyField(
+        PeriodDetail,
+        related_name='referrers',
+        related_query_name='referrer'
         )
-    country = models.ForeignKey(
-        PeriodDetail, 
-        related_name='countries', 
-        related_query_name='country',
-        on_delete=models.CASCADE,
-        null=True    
+    country = models.ManyToManyField(
+        PeriodDetail,
+        related_name='countries',
+        related_query_name='country'
         )
-    browser = models.ForeignKey(
-        PeriodDetail, 
-        related_name='browsers', 
-        related_query_name='browser',
-        on_delete=models.CASCADE,
-        null=True
+    browser = models.ManyToManyField(
+        PeriodDetail,
+        related_name='browsers',
+        related_query_name='browser'
         )
-    platform = models.ForeignKey(
-        PeriodDetail, 
-        related_name='platforms', 
-        related_query_name='platform',
-        on_delete=models.CASCADE,
-        null=True
+    platform = models.ManyToManyField(
+        PeriodDetail,
+        related_name='platforms',
+        related_query_name='platform'
         )
 
 # Error Message
@@ -107,6 +99,6 @@ class Error(models.Model):
     error = models.OneToOneField(
         ErrorDetail,
         on_delete=models.CASCADE,
-    )
+        )
     code = models.IntegerField()
     message = models.CharField(max_length=200)

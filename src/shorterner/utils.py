@@ -62,38 +62,39 @@ def create_period(obj_dict, obj_list, *keys):
         short_url_clicks = int(obj_dict.get(keys[0]).get(keys[1]).get(keys[2])),
         long_url_clicks = int(obj_dict.get(keys[0]).get(keys[1]).get(keys[3]))
     )
+    output.save()
     for index, list in enumerate(obj_list):
         print(f"List Index: {index} | List: {list}")
         if index is 0:
             obj_count = 0
             for item in list:
-                output.referrer = item
+                output.referrer.add(item)
                 obj_count = obj_count + 1
             obj_total = obj_total + obj_count
             print(f"Referrers added {obj_count} objects")
         elif index is 1:
             obj_count = 0
             for item in list:
-                output.country = item
+                output.country.add(item)
                 obj_count = obj_count + 1
             obj_total = obj_total + obj_count
             print(f"Countries added {obj_count} objects")
         elif index is 2:
             obj_count = 0
             for item in list:
-                output.browser = item
+                output.browser.add(item)
                 obj_count = obj_count + 1
             obj_total = obj_total + obj_count
             print(f"Browsers added {obj_count} objects")
         elif index is 3:
             obj_count = 0
             for item in list:
-                output.platforms = item
+                output.platform.add(item)
                 obj_count = obj_count + 1
             obj_total = obj_total + obj_count
             print(f"Platforms added {obj_count} objects")
     output.save()
-    # print(f"The total number of object(s) added is {obj_total}")
+    print(f"The total number of object(s) added is {obj_total}")
     return output
     
 def create_url(obj_json, input_url):

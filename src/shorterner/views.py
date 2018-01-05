@@ -85,12 +85,16 @@ class DetailView(DetailView):
         # Calls the base implementation first to get a context
         context = super(DetailView, self).get_context_data(**kwargs)
         alltime = self.object.alltime
-        alltime_referrer = PeriodDetail.objects.filter(pk=alltime.referrer.pk)
+        alltime_referrer = alltime.referrer.all() 
+        alltime_country = alltime.country.all()
+        alltime_browser = alltime.browser.all()
+        alltime_platform = alltime.platform.all()      
 
         context['alltime'] = self.object.alltime
-
-
-
+        context['alltime_referrer'] = alltime_referrer
+        context['alltime_country'] = alltime_country
+        context['alltime_browser'] = alltime_browser
+        context['alltime_platform'] = alltime_platform
 
         return context
 
