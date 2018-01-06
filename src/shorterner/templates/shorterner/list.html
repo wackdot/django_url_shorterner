@@ -6,7 +6,7 @@
         {% for url in url_list %}
         <li>
             {{url.short_url}} | {{url.input_url}} |
-            <a href="{% url 'shorterner:url-detail' pk=url.id %}">Details</a>
+            <a href="{% url 'shorterner:url-detail' pk=url.id %}" target="_blank">Details</a>
         </li>
         {% endfor %}
     </ul>

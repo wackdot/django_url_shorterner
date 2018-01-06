@@ -38,10 +38,10 @@ def keys_exists(element, *keys):
             return False
     return True
 
-def create_period_detail(obj, keys):
+def create_period_detail(obj, *keys):
     return_list = []
     obj_count = 0
-    if keys_exists(obj, keys):
+    if keys_exists(obj, *keys):
         obj_list = obj.get(keys[0]).get(keys[1]).get(keys[2])
         print(f"Period: {keys[1]} | Metric Type: {keys[2]}")
         for item in obj_list:
@@ -97,7 +97,7 @@ def create_period(obj, obj_list, *keys):
     print(f"The total number of object(s) added is {obj_total}")
     return output
     
-def create_url(obj, input_url):
+def create_analytics(obj):
     # Retrieving values from JSON > Creating 
     # Tier 3
     # All Time
@@ -142,63 +142,86 @@ def create_url(obj, input_url):
     day = create_period(obj, day_list, 'analytics', 'day', 'shortUrlClicks', 'longUrlClicks')
     twoHour = create_period(obj, twoHour_list, 'analytics', 'twoHours', 'shortUrlClicks', 'longUrlClicks')
 
-    # Tier 1
-    # Create Url
-    new_url = Url.objects.create(
-        short_url = obj.get('id'),
-        input_url = input_url,
-        status = obj.get('status'),
-        created = obj.get('created'),
-        alltime = alltime,
-        month = month,
-        week = week,
-        day = day,
-        twohour = twoHour                      
-    )
+    analytics_list = []
+    analytics_list.append(alltime)
+    analytics_list.append(month)
+    analytics_list.append(week)
+    analytics_list.append(day)
+    analytics_list.append(twoHour)
+
+    return analytics_list
+
+# Non default/optional arguments before default/optional arguments
+def create_url(status, input_url, obj_list, obj=None):
+    if status is 'Success':
+        new_url = Url.objects.create(
+            short_url = obj.get('id'),
+            input_url = input_url,
+            status = obj.get('status'),
+            created = obj.get('created'),
+            alltime = obj_list[0],
+            month = obj_list[1],
+            week = obj_list[2],
+            day = obj_list[3],
+            twohour = obj_list[4],
+            errormessage = None                      
+            )
+    elif status is 'Unsuccessful':
+        new_url = Url.objects.create(
+            short_url = '',
+            input_url = input_url,
+            status = 'Error',
+            created = None,
+            alltime = None,
+            month = None,
+            week = None,
+            day = None,
+            twohour = None,
+            errormessage = obj_list[0]                      
+            )
     return new_url
 
-def create_error_detail(obj, keys):
+def create_error_detail(obj):
     new_obj_count = 0
-    obj = obj.get(keys[0]).get(keys[1])
+    obj = obj.get('error').get('errors')
     print("Retriving error message details")
-
-# Error at retrieving the items in the list
-
-    new_error_detail = ErrorDetail(
-        domain = obj[0],
-        required = obj[1],
-        message = obj[2],
-        locationType = obj[3],
-        location = obj[4]
-    )
-    new_error_detail.save()
-    new_obj_count = new_obj_count + 1
-    print(
-        f"""Entry Count: {new_obj_count} | 
-        Domain: {new_item.domain} | 
-        Required: {new_item.required} |
-        Message: {new_item.message} |
-        Location Type: {new_item.locationType} |
-        Location: {new_item.location}"""
+    for item in obj:
+        new_error_detail = ErrorDetail(
+            domain = item.get('domain'),
+            reason = item.get('reason'),
+            message = item.get('message'),
+            locationType = item.get('locationType'),
+            location = item.get('location')
         )
+        new_error_detail.save()
+        new_obj_count = new_obj_count + 1
+        print(
+            f"""
+            Index: {new_obj_count} | 
+            Domain: {new_error_detail.domain} | 
+            Required: {new_error_detail.reason} |
+            Message: {new_error_detail.message} |
+            Location Type: {new_error_detail.locationType} |
+            Location: {new_error_detail.location}"""
+            )
     return new_error_detail
 
 def create_error(obj):
     new_obj_count = 0
-    # if keys_exists(obj, 'error', 'errors', 'domain', 'reason', 'message', 'locationType', 'location'):
-    keys = ['error', 'errors']
-    error_detail = create_error_detail(obj, keys)
+    error_detail = create_error_detail(obj)
     new_error = Error.objects.create(
         error = error_detail,
-        code = obj.get(keys[0]).get(keys[1]).code,
-        message = obj.get(keys[0]).get(keys[1]).message
+        code = int(obj.get('error').get('code')),
+        message = obj.get('error').get('message')
     )
     new_obj_count = new_obj_count + 1
+    new_error_list = []
+    new_error_list.append(new_error)
     print(
         f"""
         Entry Count: {new_obj_count} | 
         Domain: {new_error.error.domain} | 
-        Required: {new_error.error.required} |
+        Reason: {new_error.error.reason} |
         Message: {new_error.error.message} |
         Location Type: {new_error.error.locationType} |
         Location: {new_error.error.location} | 
@@ -206,6 +229,6 @@ def create_error(obj):
         Message: {new_error.message}
         """
         )
-    return new_error
+    return new_error_list
 
 

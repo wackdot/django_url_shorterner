@@ -3,12 +3,20 @@ from django.urls import reverse
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
-# Success Message: 3rd Tier Model 
+# Success Message: Tier 3 
 class PeriodDetail(models.Model):
     count = models.IntegerField()
     source_id = models.CharField(max_length=200)
 
-# Success Message: 2nd Tier Model 
+# Error Message: Tier 3
+class ErrorDetail(models.Model):
+    domain = models.CharField(max_length=200)
+    reason = models.CharField(max_length=200)
+    message = models.CharField(max_length=200)
+    locationType = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+
+# Success Message: Tier 2 
 class Period(models.Model):
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
@@ -33,12 +41,33 @@ class Period(models.Model):
         related_query_name='platform'
         )
 
-# Success Message: 1st Tier 
+# Error Message: Tier 2
+class Error(models.Model):
+    error = models.OneToOneField(
+        ErrorDetail,
+        on_delete=models.CASCADE,
+        )
+    code = models.IntegerField()
+    message = models.CharField(max_length=200)
+
+
+# Success Message: Tier 1 
+# Charfields should only be set to blank (Empty string), null is not required
+# Datetime set blank(For admin), null(db storage)
 class Url(models.Model):
-    short_url = models.CharField(max_length=200)
+    short_url = models.CharField(
+        max_length=200,
+        blank=True
+        )
     input_url = models.CharField(max_length=200)
-    status = models.CharField(max_length=10)
-    created = models.DateTimeField()
+    status = models.CharField(
+        max_length=10,
+        blank=True
+        )
+    created = models.DateTimeField(
+        blank=True,
+        null=True
+        )
     alltime = models.OneToOneField(
         Period,
         on_delete=models.CASCADE,
@@ -74,31 +103,19 @@ class Url(models.Model):
         related_name='twohours', 
         related_query_name='twohour',
         )
+    errormessage = models.OneToOneField(
+        Error,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name='errormessages',
+        related_query_name='errormessage'
+        )
     
     def __str__(self):
-        return self.short_url
+        return self.input_url
 
-    def get_absolute_url(self):
-        return reverse('shorterner:details', kwargs={'slug': self.short_url})
-    
     @property
     def title(self):
-        return self.short_url
+        return self.input_url
 
-# Error Message: Tier 2 
-class ErrorDetail(models.Model):
-    domain = models.CharField(max_length=200)
-    required = models.CharField(max_length=200)
-    message = models.CharField(max_length=200)
-    locationType = models.CharField(max_length=200)
-    location = models.CharField(max_length=200)
-
-# Error Message: Tier 1
-class Error(models.Model):
-    error = models.OneToOneField(
-        ErrorDetail,
-        on_delete=models.CASCADE,
-        )
-    code = models.IntegerField()
-    message = models.CharField(max_length=200)
 

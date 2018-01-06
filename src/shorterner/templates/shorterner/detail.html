@@ -11,13 +11,15 @@
 
     <!-- add a check for null using if  -->
     {% if alltime_referrer %}
-    <ul>
+    <!-- <ul>
         {% for referrers in alltime_referrer %} 
         <li>
             {{ referrers.count }} | {{ referrers.source_id }}
         </li>
         {% endfor %}
-    </ul>
+    </ul> -->
     {% endif %}
     
+    {{ point_chart.as_html}}
+
 {% endblock %}
