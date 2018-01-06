@@ -9,8 +9,9 @@ from django.http import Http404
 
 from .models import ErrorDetail, Error, Period, PeriodDetail, Url
 from .forms import SubmitUrlForm
-from .utils import google_url_shorten, google_url_expand, keys_exists, create_period, create_period_detail, create_url
+from .utils import google_url_shorten, google_url_expand, keys_exists, create_period, create_period_detail, create_url, create_error, create_error_detail
 
+invalid_email = 'https://portal.wdf.sap.corp/irj/go/km/docs/guid/600840f6-2d2d-2e10-5bb7-##fca7779a24cc'
 
 class RequestView(View):
     form_class = SubmitUrlForm
@@ -39,7 +40,7 @@ class RequestView(View):
             if url_record:
                 url_to_delete = Url.objects.get(input_url=input_url)
                 url_to_delete.delete()
-                print("deleted")
+                print("Deleted")
 
             # Create new record 
             # Create tiny url
@@ -48,19 +49,21 @@ class RequestView(View):
 
             # Verify response type (Successful url creation)
             if 'id' in output_short:
-                short_url = output_short['id']
-                print("Extracting the short url: %s" % short_url)
+                print("Successful url creation")
+                # short_url = output_short['id']
+                # print("Extracting the short url: %s" % short_url)
 
-                # Successful tiny url creation, retrieve analytics data
-                output_expand = google_url_expand(short_url)
-                print("Printing the full url: %s" % output_expand)
+                # # Successful tiny url creation, retrieve analytics data
+                # output_expand = google_url_expand(short_url)
+                # print("Printing the full url: %s" % output_expand)
                 
-                # Successful: Analytics call
-                if 'created' in output_expand:
-                    new_url = create_url(output_expand, input_url)
-                # Unsuccesful: Error message
-                else: 
-                    test = 1
+                # # Successful: Analytics call
+                # if 'created' in output_expand:
+                #     new_url = create_url(output_expand, input_url)
+            # Unsuccesful: Error message
+            else: 
+                print("Error Message")
+                create_error(output_short)
             return HttpResponseRedirect(reverse('shorterner:url-list'))
         return render(request, self.template_name, {'form': form})
 

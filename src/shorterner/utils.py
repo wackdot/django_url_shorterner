@@ -38,11 +38,11 @@ def keys_exists(element, *keys):
             return False
     return True
 
-def create_period_detail(obj_dict, *keys):
+def create_period_detail(obj, keys):
     return_list = []
     obj_count = 0
-    if keys_exists(obj_dict, *keys):
-        obj_list = obj_dict.get(keys[0]).get(keys[1]).get(keys[2])
+    if keys_exists(obj, keys):
+        obj_list = obj.get(keys[0]).get(keys[1]).get(keys[2])
         print(f"Period: {keys[1]} | Metric Type: {keys[2]}")
         for item in obj_list:
             new_item = PeriodDetail(
@@ -56,11 +56,11 @@ def create_period_detail(obj_dict, *keys):
     return return_list
 
 
-def create_period(obj_dict, obj_list, *keys):
+def create_period(obj, obj_list, *keys):
     obj_total = 0
     output = Period(
-        short_url_clicks = int(obj_dict.get(keys[0]).get(keys[1]).get(keys[2])),
-        long_url_clicks = int(obj_dict.get(keys[0]).get(keys[1]).get(keys[3]))
+        short_url_clicks = int(obj.get(keys[0]).get(keys[1]).get(keys[2])),
+        long_url_clicks = int(obj.get(keys[0]).get(keys[1]).get(keys[3]))
     )
     output.save()
     for index, list in enumerate(obj_list):
@@ -97,58 +97,58 @@ def create_period(obj_dict, obj_list, *keys):
     print(f"The total number of object(s) added is {obj_total}")
     return output
     
-def create_url(obj_json, input_url):
+def create_url(obj, input_url):
     # Retrieving values from JSON > Creating 
     # Tier 3
     # All Time
     alltime_list = []
-    alltime_list.append(create_period_detail(obj_json, 'analytics', 'allTime', 'referrers'))
-    alltime_list.append(create_period_detail(obj_json, 'analytics', 'allTime', 'countries'))
-    alltime_list.append(create_period_detail(obj_json, 'analytics', 'allTime', 'browsers'))
-    alltime_list.append(create_period_detail(obj_json, 'analytics', 'allTime', 'platforms'))
+    alltime_list.append(create_period_detail(obj, 'analytics', 'allTime', 'referrers'))
+    alltime_list.append(create_period_detail(obj, 'analytics', 'allTime', 'countries'))
+    alltime_list.append(create_period_detail(obj, 'analytics', 'allTime', 'browsers'))
+    alltime_list.append(create_period_detail(obj, 'analytics', 'allTime', 'platforms'))
     
     # Month
     month_list = []
-    month_list.append(create_period_detail(obj_json, 'analytics', 'month', 'referrers'))
-    month_list.append(create_period_detail(obj_json, 'analytics', 'month', 'countries'))
-    month_list.append(create_period_detail(obj_json, 'analytics', 'month', 'browsers'))
-    month_list.append(create_period_detail(obj_json, 'analytics', 'month', 'platforms'))
+    month_list.append(create_period_detail(obj, 'analytics', 'month', 'referrers'))
+    month_list.append(create_period_detail(obj, 'analytics', 'month', 'countries'))
+    month_list.append(create_period_detail(obj, 'analytics', 'month', 'browsers'))
+    month_list.append(create_period_detail(obj, 'analytics', 'month', 'platforms'))
 
     # Week
     week_list = []
-    week_list.append(create_period_detail(obj_json, 'analytics', 'week', 'referrers'))
-    week_list.append(create_period_detail(obj_json, 'analytics', 'week', 'countries'))
-    week_list.append(create_period_detail(obj_json, 'analytics', 'week', 'browsers'))
-    week_list.append(create_period_detail(obj_json, 'analytics', 'week', 'platforms'))
+    week_list.append(create_period_detail(obj, 'analytics', 'week', 'referrers'))
+    week_list.append(create_period_detail(obj, 'analytics', 'week', 'countries'))
+    week_list.append(create_period_detail(obj, 'analytics', 'week', 'browsers'))
+    week_list.append(create_period_detail(obj, 'analytics', 'week', 'platforms'))
     
     # Day
     day_list = []
-    day_list.append(create_period_detail(obj_json, 'analytics', 'day', 'referrers'))
-    day_list.append(create_period_detail(obj_json, 'analytics', 'day', 'countries'))
-    day_list.append(create_period_detail(obj_json, 'analytics', 'day', 'browsers'))
-    day_list.append(create_period_detail(obj_json, 'analytics', 'day', 'platforms'))
+    day_list.append(create_period_detail(obj, 'analytics', 'day', 'referrers'))
+    day_list.append(create_period_detail(obj, 'analytics', 'day', 'countries'))
+    day_list.append(create_period_detail(obj, 'analytics', 'day', 'browsers'))
+    day_list.append(create_period_detail(obj, 'analytics', 'day', 'platforms'))
 
     # twoHours
     twoHour_list = []
-    twoHour_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'referrers'))
-    twoHour_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'countries'))
-    twoHour_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'browsers'))
-    twoHour_list.append(create_period_detail(obj_json, 'analytics', 'twoHours', 'platforms'))
+    twoHour_list.append(create_period_detail(obj, 'analytics', 'twoHours', 'referrers'))
+    twoHour_list.append(create_period_detail(obj, 'analytics', 'twoHours', 'countries'))
+    twoHour_list.append(create_period_detail(obj, 'analytics', 'twoHours', 'browsers'))
+    twoHour_list.append(create_period_detail(obj, 'analytics', 'twoHours', 'platforms'))
 
     # Tier 2
-    alltime = create_period(obj_json, alltime_list, 'analytics', 'allTime', 'shortUrlClicks', 'longUrlClicks')
-    month = create_period(obj_json, month_list, 'analytics', 'month', 'shortUrlClicks', 'longUrlClicks')
-    week = create_period(obj_json, week_list, 'analytics', 'week', 'shortUrlClicks', 'longUrlClicks')
-    day = create_period(obj_json, day_list, 'analytics', 'day', 'shortUrlClicks', 'longUrlClicks')
-    twoHour = create_period(obj_json, twoHour_list, 'analytics', 'twoHours', 'shortUrlClicks', 'longUrlClicks')
+    alltime = create_period(obj, alltime_list, 'analytics', 'allTime', 'shortUrlClicks', 'longUrlClicks')
+    month = create_period(obj, month_list, 'analytics', 'month', 'shortUrlClicks', 'longUrlClicks')
+    week = create_period(obj, week_list, 'analytics', 'week', 'shortUrlClicks', 'longUrlClicks')
+    day = create_period(obj, day_list, 'analytics', 'day', 'shortUrlClicks', 'longUrlClicks')
+    twoHour = create_period(obj, twoHour_list, 'analytics', 'twoHours', 'shortUrlClicks', 'longUrlClicks')
 
     # Tier 1
     # Create Url
     new_url = Url.objects.create(
-        short_url = obj_json.get('id'),
+        short_url = obj.get('id'),
         input_url = input_url,
-        status = obj_json.get('status'),
-        created = obj_json.get('created'),
+        status = obj.get('status'),
+        created = obj.get('created'),
         alltime = alltime,
         month = month,
         week = week,
@@ -157,35 +157,55 @@ def create_url(obj_json, input_url):
     )
     return new_url
 
+def create_error_detail(obj, keys):
+    new_obj_count = 0
+    obj = obj.get(keys[0]).get(keys[1])
+    print("Retriving error message details")
+
+# Error at retrieving the items in the list
+
+    new_error_detail = ErrorDetail(
+        domain = obj[0],
+        required = obj[1],
+        message = obj[2],
+        locationType = obj[3],
+        location = obj[4]
+    )
+    new_error_detail.save()
+    new_obj_count = new_obj_count + 1
+    print(
+        f"""Entry Count: {new_obj_count} | 
+        Domain: {new_item.domain} | 
+        Required: {new_item.required} |
+        Message: {new_item.message} |
+        Location Type: {new_item.locationType} |
+        Location: {new_item.location}"""
+        )
+    return new_error_detail
+
+def create_error(obj):
+    new_obj_count = 0
+    # if keys_exists(obj, 'error', 'errors', 'domain', 'reason', 'message', 'locationType', 'location'):
+    keys = ['error', 'errors']
+    error_detail = create_error_detail(obj, keys)
+    new_error = Error.objects.create(
+        error = error_detail,
+        code = obj.get(keys[0]).get(keys[1]).code,
+        message = obj.get(keys[0]).get(keys[1]).message
+    )
+    new_obj_count = new_obj_count + 1
+    print(
+        f"""
+        Entry Count: {new_obj_count} | 
+        Domain: {new_error.error.domain} | 
+        Required: {new_error.error.required} |
+        Message: {new_error.error.message} |
+        Location Type: {new_error.error.locationType} |
+        Location: {new_error.error.location} | 
+        Code: {new_error.code} | 
+        Message: {new_error.message}
+        """
+        )
+    return new_error
 
 
-            # for index, list in enumerate(obj_list):
-            # print(f"List Index: {index} | List: {list}")
-            # if index is 0:
-            #     obj_count = 0
-            #     for item in list:
-            #         referrer = item
-            #         obj_count = obj_count + 1
-            #     obj_total = obj_total + obj_count
-            #     print(f"Referrers added {obj_count} objects")
-            # elif index is 1:
-            #     obj_count = 0
-            #     for item in list:
-            #         output.country = item
-            #         obj_count = obj_count + 1
-            #     obj_total = obj_total + obj_count
-            #     print(f"Countries added {obj_count} objects")
-            # elif index is 2:
-            #     obj_count = 0
-            #     for item in list:
-            #         output.browser = item
-            #         obj_count = obj_count + 1
-            #     obj_total = obj_total + obj_count
-            #     print(f"Browsers added {obj_count} objects")
-            # elif index is 3:
-            #     obj_count = 0
-            #     for item in list:
-            #         output.platforms = item
-            #         obj_count = obj_count + 1
-            #     obj_total = obj_total + obj_count
-            #     print(f"Platforms added {obj_count} objects")

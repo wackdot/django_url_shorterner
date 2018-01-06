@@ -3,14 +3,12 @@ from django.urls import reverse
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
-# 3rd Tier Models
-# Success 
+# Success Message: 3rd Tier Model 
 class PeriodDetail(models.Model):
     count = models.IntegerField()
     source_id = models.CharField(max_length=200)
 
-# 2nd Tier Models
-# Success
+# Success Message: 2nd Tier Model 
 class Period(models.Model):
     short_url_clicks = models.IntegerField()
     long_url_clicks = models.IntegerField()
@@ -35,15 +33,7 @@ class Period(models.Model):
         related_query_name='platform'
         )
 
-# Error Message
-class ErrorDetail(models.Model):
-    domain = models.CharField(max_length=200)
-    required = models.CharField(max_length=200)
-    message = models.CharField(max_length=200)
-    locationType = models.CharField(max_length=200)
-    location = models.CharField(max_length=200)
-
-# 1st Tier Models
+# Success Message: 1st Tier 
 class Url(models.Model):
     short_url = models.CharField(max_length=200)
     input_url = models.CharField(max_length=200)
@@ -95,6 +85,15 @@ class Url(models.Model):
     def title(self):
         return self.short_url
 
+# Error Message: Tier 2 
+class ErrorDetail(models.Model):
+    domain = models.CharField(max_length=200)
+    required = models.CharField(max_length=200)
+    message = models.CharField(max_length=200)
+    locationType = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+
+# Error Message: Tier 1
 class Error(models.Model):
     error = models.OneToOneField(
         ErrorDetail,
@@ -102,3 +101,4 @@ class Error(models.Model):
         )
     code = models.IntegerField()
     message = models.CharField(max_length=200)
+
