@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'shorterner.apps.ShorternerConfig'
+    'shorterner.apps.ShorternerConfig',
+    'graphos.apps.GraphosConfig'
 ]
 
 MIDDLEWARE = [
@@ -120,3 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# All static files contained in the DIRS would be transferred to the STATIC ROOT
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'), # The static file location is 'src/static'
+    ]
+
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")

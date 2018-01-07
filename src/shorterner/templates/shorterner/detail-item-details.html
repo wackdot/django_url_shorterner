@@ -1,0 +1,16 @@
+{% if pd_list %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tr>
+                <th>Source</th>
+                <th>Count</th>
+            </tr>
+            {% for item in pd_list %}
+            <tr>
+                <td>{{item.source_id}}</td>
+                <td>{{item.count}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}

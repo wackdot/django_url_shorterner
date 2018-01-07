@@ -6,20 +6,15 @@
     <p>Input Url: {{ url_details.input_url}}</p>
     <p>Status: {{ url_details.status }}</p>
     <p>Created: {{ url_details.created }}</p>
-    <p>{{ alltime.short_url_clicks }}</p>
 
-
-    <!-- add a check for null using if  -->
-    {% if alltime_referrer %}
-    <!-- <ul>
-        {% for referrers in alltime_referrer %} 
-        <li>
-            {{ referrers.count }} | {{ referrers.source_id }}
-        </li>
-        {% endfor %}
-    </ul> -->
+    {% if alltime %}
+        {% include "shorterner/detail-item.html" with p=alltime %}
+        {% include "shorterner/detail-item-details.html" with pd_list=alltime_referrer %}
+        {% include "shorterner/detail-item-details.html" with pd_list=alltime_country %}
+        {% include "shorterner/detail-item-details.html" with pd_list=alltime_browser %}
+        {% include "shorterner/detail-item-details.html" with pd_list=alltime_platform %}
     {% endif %}
-    
-    {{ point_chart.as_html}}
+
+
 
 {% endblock %}

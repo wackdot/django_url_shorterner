@@ -7,7 +7,9 @@ from django.views.generic.detail import SingleObjectMixin, DetailView
 from django.core import serializers
 from django.http import Http404
 from graphos.sources.model import ModelDataSource
-from graphos.renderers import gchart
+from graphos.sources.simple import SimpleDataSource
+from graphos.renderers import gchart 
+
 
 from .models import ErrorDetail, Error, Period, PeriodDetail, Url
 from .forms import SubmitUrlForm
@@ -104,78 +106,85 @@ class DetailView(DetailView):
                 alltime_browser = alltime.browser.all()
                 alltime_platform = alltime.platform.all()  
 
-                data_source = ModelDataSource(
-                    alltime_referrer, 
-                    fields=['count', 'source_id']
-                    )
-                chart = gchart.PieChart(
-                    data_source, 
-                    height=100, 
-                    width=100, 
-                    options={'title': 'All Time Referrers'})
-                context['chart'] = chart
+                context['alltime'] = alltime
+                context['alltime_referrer'] = alltime_referrer
+                context['alltime_country'] = alltime_country
+                context['alltime_browser'] = alltime_browser
+                context['alltime_platform'] = alltime_platform
 
-                # Test if data is coming, display data first before using the graphs, also find the no data display for the graphs
+                # alltime_referrer_chart = gchart.PieChart(
+                #     ModelDataSource(
+                #         alltime_referrer, 
+                #         fields=[
+                #             'count', 
+                #             'source_id']
+                #         )
+                #     )
+                # context['alltime_referrer_chart'] = alltime_referrer_chart
 
-                # context['alltime'] = alltime
-                # context['alltime_referrer'] = alltime_referrer
-                # context['alltime_country'] = alltime_country
-                # context['alltime_browser'] = alltime_browser
-                # context['alltime_platform'] = alltime_platform
-            if month is not None:
-                month_referrer = month.referrer.all() 
-                month_country = month.country.all()
-                month_browser = month.browser.all()
-                month_platform = month.platform.all()  
+        #     if month is not None:
+        #         month_referrer = month.referrer.all() 
+        #         month_country = month.country.all()
+        #         month_browser = month.browser.all()
+        #         month_platform = month.platform.all()  
 
-                # context['month'] = month
-                # context['month_referrer'] = month_referrer
-                # context['month_country'] = month_country
-                # context['month_browser'] = month_browser
-                # context['month_platform'] = month_platform
-            if week is not None:
-                week_referrer = week.referrer.all() 
-                week_country = week.country.all()
-                week_browser = week.browser.all()
-                week_platform = week.platform.all()  
+        #         context['month'] = month
+        #         context['month_referrer'] = month_referrer
+        #         context['month_country'] = month_country
+        #         context['month_browser'] = month_browser
+        #         context['month_platform'] = month_platform
+        #     if week is not None:
+        #         week_referrer = week.referrer.all() 
+        #         week_country = week.country.all()
+        #         week_browser = week.browser.all()
+        #         week_platform = week.platform.all()  
 
-                # context['week'] = week
-                # context['week_referrer'] = week_referrer
-                # context['week_country'] = week_country
-                # context['week_browser'] = week_browser
-                # context['week_platform'] = week_platform
-            if day is not None:
-                day_referrer = day.referrer.all() 
-                day_country = day.country.all()
-                day_browser = day.browser.all()
-                day_platform = day.platform.all()  
+        #         context['week'] = week
+        #         context['week_referrer'] = week_referrer
+        #         context['week_country'] = week_country
+        #         context['week_browser'] = week_browser
+        #         context['week_platform'] = week_platform
+        #     if day is not None:
+        #         day_referrer = day.referrer.all() 
+        #         day_country = day.country.all()
+        #         day_browser = day.browser.all()
+        #         day_platform = day.platform.all()  
 
-                # context['day'] = day
-                # context['day_referrer'] = day_referrer
-                # context['day_country'] = day_country
-                # context['day_browser'] = day_browser
-                # context['day_platform'] = day_platform 
-            if twohour is not None:
-                twohour_referrer = twohour.referrer.all() 
-                twohour_country = twohour.country.all()
-                twohour_browser = twohour.browser.all()
-                twohour_platform = twohour.platform.all()  
+        #         context['day'] = day
+        #         context['day_referrer'] = day_referrer
+        #         context['day_country'] = day_country
+        #         context['day_browser'] = day_browser
+        #         context['day_platform'] = day_platform 
+        #     if twohour is not None:
+        #         twohour_referrer = twohour.referrer.all() 
+        #         twohour_country = twohour.country.all()
+        #         twohour_browser = twohour.browser.all()
+        #         twohour_platform = twohour.platform.all()  
 
-                # context['twohour'] = twohour
-                # context['twohour_referrer'] = twohour_referrer
-                # context['twohour_country'] = twohour_country
-                # context['twohour_browser'] = twohour_browser
-                # context['twohour_platform'] = twohour_platform
-        else:
-            if errormessage is not None:
-                error = errormessage.error
+        #         context['twohour'] = twohour
+        #         context['twohour_referrer'] = twohour_referrer
+        #         context['twohour_country'] = twohour_country
+        #         context['twohour_browser'] = twohour_browser
+        #         context['twohour_platform'] = twohour_platform
+        # else:
+        #     if errormessage is not None:
+        #         error = errormessage.error
 
-                # context['errormessage'] = errormessage
-                # context['errormessage_referrer'] = errormessage_referrer
-                # context['errormessage_country'] = errormessage_country
-                # context['errormessage_browser'] = errormessage_browser
-                # context['errormessage_platform'] = errormessage_platform
+        #         context['errormessage'] = errormessage
+        #         context['errormessage_referrer'] = errormessage_referrer
+        #         context['errormessage_country'] = errormessage_country
+        #         context['errormessage_browser'] = errormessage_browser
+        #         context['errormessage_platform'] = errormessage_platform
         return context
+    
 
-
-
+# class MyModelDataSource(ModelDataSource):
+#     def get_data(self):
+#         data = super(MyModelDataSource, self).get_data()
+#         header = data[0]
+#         data_without_header = data[1:]
+#         for row in data_without_header:
+#             # Assuming second column contains datetime
+#             row[1] = row[1].year
+#                 data_without_header.insert(0, header)
+#                 return data_without_header
