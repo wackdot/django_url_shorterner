@@ -1,0 +1,14 @@
+{% extends 'shorterner/base.html' %}
+
+{% block content %}
+<div class="container">
+      <h4 class="text-center">Delete Confirmation</h4>
+      <p class="text-center"> Are you sure you would like to delete {{ object.title }}? </p>
+  <div class="text-center">
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger">Yes, I'm sure.</button>
+      </form>
+    </div>  
+</div>
+{% endblock %}

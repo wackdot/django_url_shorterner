@@ -1,9 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.conf import settings
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View, generic
-from django.views.generic.detail import SingleObjectMixin, DetailView
 from django.core import serializers
 from django.http import Http404
 
@@ -73,7 +72,7 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Url.objects.all()
 
-class DetailView(DetailView):
+class DetailView(generic.DetailView):
     template_name = 'shorterner/detail.html'
     context_object_name = 'url_details'
 
@@ -154,3 +153,10 @@ class DetailView(DetailView):
             context['errormessage'] = errormessage
         return context
     
+class DeleteView(generic.DeleteView):
+    model = Url
+    success_url = reverse_lazy("shorterner:url-list")
+    template_name = "shorterner/delete.html"
+
+
+
