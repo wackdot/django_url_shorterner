@@ -2,14 +2,19 @@
 
 {% block content %}
 
-    <ul>
+<div class="container">
+    <div class="row">
         {% for url in url_list %}
-        <li>
-            {{url.short_url}} | {{url.input_url}} |
-            <a href="{% url 'shorterner:url-detail' pk=url.id %}" target="_blank">Details</a>
-        </li>
+        <div class="col-md-6">
+            <a href="{% url 'shorterner:url-detail' pk=url.id %}" 
+            class="list-group-item list-group-item-action flex-column align-items-start">
+                <h5 class="d-inline-block text-truncate" style="max-width: 450px;">Input Url | {{url.input_url}}</h5>
+                <p>Mini Url | {{url.short_url}}</p>
+            </a>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
+</div>
 
-    <!-- Display the detail information -->
+
 {% endblock %}

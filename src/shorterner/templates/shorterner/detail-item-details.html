@@ -1,10 +1,12 @@
 {% if pd_list %}
     <div class="table-responsive">
-        <table class="table table-striped">
-            <tr>
-                <th>Source</th>
-                <th>Count</th>
-            </tr>
+        <table class="table table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th>Source</th>
+                    <th>Count</th>
+                </tr>
+            </thead>            
             {% for item in pd_list %}
             <tr>
                 <td>{{item.source_id}}</td>

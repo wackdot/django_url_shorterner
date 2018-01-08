@@ -1,5 +1,5 @@
 
-from .models import ErrorDetail, Error, Period, PeriodDetail, Url
+from .models import Error, Period, PeriodDetail, Url
 
 import requests
 import json
@@ -168,7 +168,7 @@ def create_url(status, input_url, obj_list, obj=None):
             )
     elif status is 'Unsuccessful':
         new_url = Url.objects.create(
-            short_url = '',
+            short_url = 'Unable to generate mini url',
             input_url = input_url,
             status = 'Error',
             created = None,
@@ -181,50 +181,56 @@ def create_url(status, input_url, obj_list, obj=None):
             )
     return new_url
 
-def create_error_detail(obj):
-    new_obj_count = 0
-    obj = obj.get('error').get('errors')
-    print("Retriving error message details")
-    for item in obj:
-        new_error_detail = ErrorDetail(
-            domain = item.get('domain'),
-            reason = item.get('reason'),
-            message = item.get('message'),
-            locationType = item.get('locationType'),
-            location = item.get('location')
-        )
-        new_error_detail.save()
-        new_obj_count = new_obj_count + 1
-        print(
-            f"""
-            Index: {new_obj_count} | 
-            Domain: {new_error_detail.domain} | 
-            Required: {new_error_detail.reason} |
-            Message: {new_error_detail.message} |
-            Location Type: {new_error_detail.locationType} |
-            Location: {new_error_detail.location}"""
-            )
-    return new_error_detail
+# def create_error_detail(obj):
+#     new_obj_count = 0
+#     obj = obj.get('error').get('errors')
+#     print("Retriving error message details")
+#     for item in obj:
+#         new_error_detail = ErrorDetail(
+#             domain = item.get('domain'),
+#             reason = item.get('reason'),
+#             message = item.get('message'),
+#             locationType = item.get('locationType'),
+#             location = item.get('location')
+#         )
+#         new_error_detail.save()
+#         new_obj_count = new_obj_count + 1
+#         print(
+#             f"""
+#             Index: {new_obj_count} | 
+#             Domain: {new_error_detail.domain} | 
+#             Required: {new_error_detail.reason} |
+#             Message: {new_error_detail.message} |
+#             Location Type: {new_error_detail.locationType} |
+#             Location: {new_error_detail.location}"""
+#             )
+#     return new_error_detail
 
 def create_error(obj):
     new_obj_count = 0
-    error_detail = create_error_detail(obj)
-    new_error = Error.objects.create(
-        error = error_detail,
-        code = int(obj.get('error').get('code')),
-        message = obj.get('error').get('message')
-    )
+    obj_list = obj.get('error').get('errors')
+
+    for item in obj_list:
+        new_error = Error(
+        domain = item.get('domain'),
+        reason = item.get('reason'),
+        message = item.get('message'),
+        locationType = item.get('locationType'),
+        location = item.get('location'),
+        code = int(obj.get('error').get('code'))
+        )
+    new_error.save()
     new_obj_count = new_obj_count + 1
     new_error_list = []
     new_error_list.append(new_error)
     print(
         f"""
         Entry Count: {new_obj_count} | 
-        Domain: {new_error.error.domain} | 
-        Reason: {new_error.error.reason} |
-        Message: {new_error.error.message} |
-        Location Type: {new_error.error.locationType} |
-        Location: {new_error.error.location} | 
+        Domain: {new_error.domain} | 
+        Reason: {new_error.reason} |
+        Message: {new_error.message} |
+        Location Type: {new_error.locationType} |
+        Location: {new_error.location} | 
         Code: {new_error.code} | 
         Message: {new_error.message}
         """

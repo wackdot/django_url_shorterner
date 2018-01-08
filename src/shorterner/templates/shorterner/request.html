@@ -2,10 +2,25 @@
 
 {% block content %}
 
-    <form action="{% url 'shorterner:url-request' %}" method="POST">
-        {% csrf_token %}
-        <input type="text" name="url" placeholder="Url..." required/>        
-        <input type="submit" value="Submit"/>
-    </form>
+<div class="container">
+    <div class="col" align="center">
+        <div class="jumbotron">
+            <h1 class="display-4">Minify Your Url</h1>
+            <p class="lead">Try it!</p>
+            <hr class="my-4">
+            <form action="{% url 'shorterner:url-request' %}" method="POST">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <input type="text" name="url" placeholder="Url..." class="form-control" required/>        
+                    <div class="input-group-append">
+                        <button class="btn bnt-outline-secondary" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
+
+<!-- <input type="submit" value="Submit!" class="btn btn-md btn-success"/> -->

@@ -8,13 +8,13 @@ class PeriodDetail(models.Model):
     count = models.IntegerField()
     source_id = models.CharField(max_length=200)
 
-# Error Message: Tier 3
-class ErrorDetail(models.Model):
-    domain = models.CharField(max_length=200)
-    reason = models.CharField(max_length=200)
-    message = models.CharField(max_length=200)
-    locationType = models.CharField(max_length=200)
-    location = models.CharField(max_length=200)
+# # Error Message: Tier 3
+# class ErrorDetail(models.Model):
+#     domain = models.CharField(max_length=200)
+#     reason = models.CharField(max_length=200)
+#     message = models.CharField(max_length=200)
+#     locationType = models.CharField(max_length=200)
+#     location = models.CharField(max_length=200)
 
 # Success Message: Tier 2 
 class Period(models.Model):
@@ -43,13 +43,12 @@ class Period(models.Model):
 
 # Error Message: Tier 2
 class Error(models.Model):
-    error = models.OneToOneField(
-        ErrorDetail,
-        on_delete=models.CASCADE,
-        )
-    code = models.IntegerField()
+    domain = models.CharField(max_length=200)
+    reason = models.CharField(max_length=200)
     message = models.CharField(max_length=200)
-
+    locationType = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+    code = models.IntegerField()
 
 # Success Message: Tier 1 
 # Charfields should only be set to blank (Empty string), null is not required
