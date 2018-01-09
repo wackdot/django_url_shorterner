@@ -5,7 +5,9 @@ A simple url shorterner using google's url shortner API using the Django framewo
 Setup
 Remarks: Assuming you have python installed and properly setup 
 1. Clone the project, enter: git clone https://github.com/wackdot/django_url_shorterner
-2. Install the required packages, enter: pip install requirements.txt
-3. Run the project, enter: python manage.py runserver
+2. Open the project with a text editor / IDE
+3. Install the required packages, enter: pip install requirements.txt
+4. Run the project, enter: python manage.py runserver
+
 Note: You need to be on the same directory level as the txt / py file
 
